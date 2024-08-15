@@ -1,3 +1,4 @@
+function treeVisualization(canvasId){
 document.addEventListener('DOMContentLoaded', function() {
     try {
         const canvas = document.getElementById('treeCanvas');
@@ -132,3 +133,6 @@ document.addEventListener('DOMContentLoaded', function() {
         alert('Ocorreu um erro ao carregar o conteúdo. Verifique o console para mais detalhes.');
     }
 });
+}
+
+export {treeVisualization};

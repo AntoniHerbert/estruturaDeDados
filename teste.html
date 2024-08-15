@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo da Velha</title>
+    <style>
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 5px;
+            margin-bottom: 20px;
+        }
+        .cell {
+            width: 100px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+        }
+        .cell:hover {
+            background-color: #e0e0e0;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+
+<div class="board" id="board">
+    <!-- Casas do tabuleiro -->
+    <div class="cell" data-row="0" data-col="0"></div>
+    <div class="cell" data-row="0" data-col="1"></div>
+    <div class="cell" data-row="0" data-col="2"></div>
+    <div class="cell" data-row="1" data-col="0"></div>
+    <div class="cell" data-row="1" data-col="1"></div>
+    <div class="cell" data-row="1" data-col="2"></div>
+    <div class="cell" data-row="2" data-col="0"></div>
+    <div class="cell" data-row="2" data-col="1"></div>
+    <div class="cell" data-row="2" data-col="2"></div>
+</div>
+
+<button id="resetButton" disabled>Visualizar Árvore</button>
+
+<script>
+    let currentPlayer = 'X';
+    const board = [
+        ['', '', ''],
+        ['', '', ''],
+        ['', '', '']
+    ];
+
+    const resetButton = document.getElementById('resetButton');
+
+    function updateButtonState() {
+        const xCount = board.flat().filter(cell => cell === 'X').length;
+        const oCount = board.flat().filter(cell => cell === 'O').length;
+        resetButton.disabled = Math.abs(xCount - oCount) > 1;
+    }
+
+    document.getElementById('board').addEventListener('click', function(event) {
+        if (event.target.classList.contains('cell')) {
+            const row = event.target.getAttribute('data-row');
+            const col = event.target.getAttribute('data-col');
+            board[row][col] = currentPlayer;
+            event.target.textContent = currentPlayer;
+            // Troca o turno
+            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+            // Atualiza o estado do botão
+            updateButtonState();
+        }
+    });
+
+    resetButton.addEventListener('click', function() {
+        // Limpa o tabuleiro
+        document.querySelectorAll('.cell').forEach(cell => {
+            cell.textContent = '';
+        });
+        // Chama a função treeVisualization passando o tabuleiro atual
+        treeVisualization(board);
+    });
+
+    function treeVisualization(board) {
+        console.log("Visualizando Árvore com o Tabuleiro:");
+        console.log(board);
+        // Aqui você pode implementar a visualização da árvore de acordo com a lógica necessária
+    }
+</script>
+
+</body>
+</html>
