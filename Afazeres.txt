@@ -1,0 +1,2 @@
+Criar uma função best branch que mostra uma árvore simples apenas com o melhor "galho" para ganhar e adicionar um botão em teste.html para chamar essa função
+trocar a função generateTree em treevisualization.js para o código em teste.js
