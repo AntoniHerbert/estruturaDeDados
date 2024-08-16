@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo da Velha</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 5px;
+            margin-bottom: 20px;
+        }
+        .cell {
+            width: 100px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .board-sequence {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .board-display {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 5px;
+            margin: 20px auto;
+        }
+        .arrow {
+            font-size: 36px;
+            text-align: center;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="board" id="board">
+    <!-- Casas do tabuleiro -->
+    <div class="cell" data-row="0" data-col="0"></div>
+    <div class="cell" data-row="0" data-col="1"></div>
+    <div class="cell" data-row="0" data-col="2"></div>
+    <div class="cell" data-row="1" data-col="0"></div>
+    <div class="cell" data-row="1" data-col="1"></div>
+    <div class="cell" data-row="1" data-col="2"></div>
+    <div class="cell" data-row="2" data-col="0"></div>
+    <div class="cell" data-row="2" data-col="1"></div>
+    <div class="cell" data-row="2" data-col="2"></div>
+</div>
+
+<button id="resetButton" disabled>Visualizar Árvore</button>
+<button id="bestBranchButton">Melhor Jogada</button>
+
+<div id="boardSequence" class="board-sequence"></div>
+
+<script>
+    let currentPlayer = 'X';
+    const board = [
+        ['', '', ''],
+        ['', '', ''],
+        ['', '', '']
+    ];
+
+    const resetButton = document.getElementById('resetButton');
+    const bestBranchButton = document.getElementById('bestBranchButton');
+    const boardSequenceDiv = document.getElementById('boardSequence');
+
+    function updateButtonState() {
+        const xCount = board.flat().filter(cell => cell === 'X').length;
+        const oCount = board.flat().filter(cell => cell === 'O').length;
+        resetButton.disabled = Math.abs(xCount - oCount) > 1;
+    }
+
+    document.getElementById('board').addEventListener('click', function(event) {
+        if (event.target.classList.contains('cell')) {
+            const row = event.target.getAttribute('data-row');
+            const col = event.target.getAttribute('data-col');
+            board[row][col] = currentPlayer;
+            event.target.textContent = currentPlayer;
+            // Troca o turno
+            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+            // Atualiza o estado do botão
+            updateButtonState();
+        }
+    });
+
+    resetButton.addEventListener('click', function() {
+        // Limpa o tabuleiro
+        document.querySelectorAll('.cell').forEach(cell => {
+            cell.textContent = '';
+        });
+        // Chama a função treeVisualization passando o tabuleiro atual
+        treeVisualization(board);
+    });
+
+    bestBranchButton.addEventListener('click', function() {
+        bestBranch();
+    });
+
+    function treeVisualization(board) {
+        console.log("Visualizando Árvore com o Tabuleiro:");
+        console.log(board);
+        // Aqui você pode implementar a visualização da árvore de acordo com a lógica necessária
+    }
+
+    function bestBranch() {
+        const boardSequence = [
+            [
+                ['X', '', 'O'],
+                ['', 'X', ''],
+                ['O', '', 'X']
+            ],
+            [
+                ['X', '', 'O'],
+                ['X', 'X', ''],
+                ['O', '', 'X']
+            ],
+            [
+                ['X', 'O', 'O'],
+                ['X', 'X', ''],
+                ['O', '', 'X']
+            ]
+        ];
+
+        boardSequenceDiv.innerHTML = ''; // Limpa a sequência anterior
+
+        boardSequence.forEach((boardState, index) => {
+            const boardDisplay = document.createElement('div');
+            boardDisplay.classList.add('board-display');
+
+            boardState.forEach((row, rowIndex) => {
+                row.forEach((cellValue, colIndex) => {
+                    const cell = document.createElement('div');
+                    cell.classList.add('cell');
+                    cell.textContent = cellValue;
+                    boardDisplay.appendChild(cell);
+                });
+            });
+
+            boardSequenceDiv.appendChild(boardDisplay);
+
+            if (index < boardSequence.length - 1) {
+                const arrow = document.createElement('div');
+                arrow.classList.add('arrow');
+                arrow.textContent = '↓';
+                boardSequenceDiv.appendChild(arrow);
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
