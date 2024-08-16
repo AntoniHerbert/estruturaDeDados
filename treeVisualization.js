@@ -1,7 +1,11 @@
-function treeVisualization(canvasId){
-document.addEventListener('DOMContentLoaded', function() {
-    try {
-        const canvas = document.getElementById('treeCanvas');
+import { criarArvore } from './arvore.js';
+
+function treeVisualization(profundidade, boardInicial) {
+        try {
+        const canvas = document.createElement('canvas');
+        canvas.id = 'treeCanvas';
+        document.body.appendChild(canvas);
+
         const ctx = canvas.getContext('2d');
         let offsetX = 0, offsetY = 0; // Offset para rolagem
         let isDragging = false;
@@ -95,29 +99,8 @@ document.addEventListener('DOMContentLoaded', function() {
             isDragging = false;
         });
 
-        // Função para gerar uma árvore binária fictícia com altura de 20
-        function generateTree(depth, turno = '+') {
-            if (depth === 0) {
-                return null;
-            }
-            const qualidade = Math.floor(Math.random() * 10) + 1;
-            return {
-                board: [
-                    ['X', '', 'O'],
-                    ['', 'X', ''],
-                    ['O', '', 'X']
-                ],
-                qualidade: qualidade,
-                turno: turno,
-                children: [
-                    generateTree(depth - 1, turno === '+' ? '-' : '+'),
-                    generateTree(depth - 1, turno === '+' ? '-' : '+')
-                ].filter(child => child !== null)
-            };
-        }
-
         // Inicializar a árvore e ajustar o canvas ao tamanho necessário
-        const treeRoot = generateTree(6);
+        const treeRoot = criarArvore(boardInicial, profundidade, '+');
         const treeSize = calculateTreeSize(treeRoot);
 
         // Ajustar o tamanho do canvas para a árvore
@@ -132,7 +115,5 @@ document.addEventListener('DOMContentLoaded', function() {
         // Exibir uma mensagem de erro no console
         alert('Ocorreu um erro ao carregar o conteúdo. Verifique o console para mais detalhes.');
     }
-});
 }
-
-export {treeVisualization};
+export { treeVisualization };

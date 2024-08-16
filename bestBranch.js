@@ -1,3 +1,5 @@
+import { criarArvore } from './arvore.js';
+
 function verificarVitoria(board, jogador) {
     const linhas = [
         [board[0][0], board[0][1], board[0][2]],
@@ -13,7 +15,10 @@ function verificarVitoria(board, jogador) {
     return linhas.some(linha => linha.every(casa => casa === jogador));
 }
 
-function bestBranch(no) {
+function bestBranch(profundidade, boardInicial) {
+    const arvore = criarArvore(boardInicial, profundidade, '+');
+
+function encontrarMelhorCaminho(no) {
     // Verifica se o nó atual é uma folha e se o "X" venceu
     if (no.filhos.length === 0) {
         if (verificarVitoria(no.board, 'X')) {
@@ -27,7 +32,7 @@ function bestBranch(no) {
 
     // Percorre os filhos em busca da melhor folha que representa uma vitória do "X"
     for (const filho of no.filhos) {
-        const caminhoFilho = bestBranch(filho);
+        const caminhoFilho = encontrarMelhorCaminho(filho);
         if (caminhoFilho !== null) {
             // Se encontrar um caminho vencedor, verifica se é o melhor (menor profundidade)
             if (melhorCaminho === null || caminhoFilho.length < melhorCaminho.length) {
@@ -39,20 +44,8 @@ function bestBranch(no) {
     return melhorCaminho;
 }
 
-// Exemplo de uso:
-const boardInicial = [
-    ['X', '', 'O'],
-    ['', 'X', ''],
-    ['O', '', 'X']
-];
+return encontrarMelhorCaminho(arvore);
 
-const profundidade = 4;
-const arvore = criarArvore(boardInicial, profundidade, '+');
-const melhorCaminho = bestBranch(arvore);
-
-if (melhorCaminho) {
-    console.log("Melhor sequência para vitória do 'X':");
-    console.log(melhorCaminho);
-} else {
-    console.log("Nenhuma vitória do 'X' encontrada na árvore.");
 }
+
+export { bestBranch };
